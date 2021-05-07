@@ -125,6 +125,66 @@ int MergeSort(int main_array[], int length) {
     return count;
 }
 
+
+// this function returns median of first middle and last element of an array
+int MedianOfThree(int arr[], int arr_length) {
+    int temp_array[arr_length];
+    ArrayCopy(arr, temp_array, 0, arr_length - 1, 0);
+    int allThree[3];
+    int medium_index = (((arr_length / 2)+ 1));
+
+    allThree[0] = arr[0];
+    allThree[1] = arr[medium_index];
+    allThree[2] = arr[arr_length - 1];
+
+    InsertionSort(allThree, 3);
+// calculating the index of the median
+    if (arr[medium_index] == allThree[1]) {
+        return medium_index;
+    } else if (arr[0] == allThree[1]) {
+        return 0;
+    } else {
+        return arr_length - 1;
+    }
+
+}
+
+
+void QuickSort(int number[], int length, int first, int last, int mode) {
+    int i, j, pivot, temp;
+
+    if (first < last) {
+
+        if (mode == 0) {
+            pivot = first;
+        } else if (mode == 1) {
+            pivot = MedianOfThree(number, length);
+        }
+        i = first;
+        j = last;
+
+        while (i < j) {
+            while (number[i] <= number[pivot] && i < last)
+                i++;
+            while (number[j] > number[pivot])
+                j--;
+            if (i < j) {
+                temp = number[i];
+                number[i] = number[j];
+                number[j] = temp;
+            }
+        }
+
+        temp = number[pivot];
+        number[pivot] = number[j];
+        number[j] = temp;
+        QuickSort(number, length, first, j - 1, mode);
+        QuickSort(number, length, j + 1, last, mode);
+
+    }
+}
+
+
 int main() {
     int worstCase_test_array[] = {11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1};
     int test_array[] = {2, 5, 63, 6, 53, 2, 567, 7, 4};
