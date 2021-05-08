@@ -3,77 +3,88 @@
 // Yusuf Taha Atalay 150119040
 
 #include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <time.h>
 #include <math.h>
 
 #define arrlen(arr) sizeof(arr) / sizeof(arr[0]);  // TODO: bruv make it work nicely mmmmmmmm
+#define MAX_SIZE 10000
+
+void Swap(int array[], int i, int j) {
+    int temp = array[i];
+    array[i] = array[j];
+    array[j] = temp;
+}
 
 // Insertion sort : works left to right
 // compare each item with the item on its left
 // Inserts the item in the correct position in the array
 // Time complexity : O(n^2)
-int InsertionSort(int unsorted_array[], int length) {
+int InsertionSort(int array[], int length) {
     int current_element;
     int count = 0;
     int j, i;
     for (i = 1; i < length; i++) {
-        current_element = unsorted_array[i];
-        for (j = i - 1; j >= 0 && unsorted_array[j] > current_element; j--) {
-            unsorted_array[j + 1] = unsorted_array[j];
-            count++;
+        current_element = array[i];
+        for (j = i - 1; j >= 0 && array[j] > current_element; j--) {
+            array[j + 1] = array[j];
+            //count++;
         }
-        count++;          // increment the count on every loop
-        unsorted_array[j + 1] = current_element;
+        // count++;          // increment the count on every loop
+        array[j + 1] = current_element;
     }
     return count;
 }
 
+// Time complexity: O(log(n))
 int BinarySearch(int arr[], int element, int end, int start, int *count) {
-
     if (end <= start) {
-        (*count)++;
+        //(*count)++;
         if (element > arr[start]) {
-            (*count)++;
+            //(*count)++;
             return start + 1;
         } else {
-            (*count)++;
+            //(*count)++;
             return start;
         }
     }
+
     int mid = (start + end) / 2;
-
-
     if (element == arr[mid]) {
-        (*count)++;
+        //(*count)++;
         return mid + 1;
     }
 
-
     if (element > arr[mid]) {
-        (*count)++;
+        //(*count)++;
         return BinarySearch(arr, element, end, mid + 1, count);
     } else {
-        (*count)++;
-        return BinarySearch(arr, element, mid - 1, start,count);
+        //(*count)++;
+        return BinarySearch(arr, element, mid - 1, start, count);
     }
 
 
 }
 
-int BinaryInsertionSort(int unsorted_array[], int length) {
+// Binary insertion sort is a type of insertion sort.
+// Traverses the elements of the array from left to right and replaces the selected element with a binary search.
+// Time complexity : O(n^2) (because every insertion also requires swap operation)
+int BinaryInsertionSort(int array[], int length) {
     int current_element, location;
     int count = 0;
     int j, i;
     for (i = 1; i < length; i++) {
         j = i - 1;
-        current_element = unsorted_array[i];
-        location = BinarySearch(unsorted_array, current_element, j, 0, &count);
+        current_element = array[i];
+        location = BinarySearch(array, current_element, j, 0, &count);
         while (j >= location) {
-            unsorted_array[j + 1] = unsorted_array[j];
+            array[j + 1] = array[j];
             count++;
             j--;
         }
-        count++;          // increment the count on every loop
-        unsorted_array[j + 1] = current_element;
+        //count++;          // increment the count on every loop
+        array[j + 1] = current_element;
     }
 
     return count;
@@ -86,9 +97,9 @@ void ArrayCopy(int source[], int dest[], int start, int end, int d_start) {
 }
 
 // this function merges two sub-arrays into a single one in sorted way
-void Merge (int first_half[], int second_half[], int array[], int f_length, int s_length) {
+void Merge(int first_half[], int second_half[], int array[], int f_length, int s_length) {
     int i = 0, j = 0, k;
-    for(k = 0; i < f_length && j < s_length; k++) {
+    for (k = 0; i < f_length && j < s_length; k++) {
         if (first_half[i] <= second_half[j]) {
             array[k] = first_half[i];
             i++;
@@ -99,14 +110,15 @@ void Merge (int first_half[], int second_half[], int array[], int f_length, int 
     }
 
     if (i == f_length) {
-        ArrayCopy(second_half, array, j, s_length-1, k);
+        ArrayCopy(second_half, array, j, s_length - 1, k);
     } else {
-        ArrayCopy(first_half, array, i, f_length-1, k);
+        ArrayCopy(first_half, array, i, f_length - 1, k);
     }
 
 }
 
 // Mergesort uses divide&conquer algorithm by dividing the given array into halves recursively and merges them sorted way
+// Time complexity : O(nLog(n))
 int MergeSort(int main_array[], int length) {
     int first_half_length = (int) floor(length / 2.0);
     int second_half_length = (int) ceil(length / 2.0);
@@ -120,80 +132,165 @@ int MergeSort(int main_array[], int length) {
         ArrayCopy(main_array, second_half, length / 2, length - 1, 0);
         MergeSort(first_half, first_half_length);
         MergeSort(second_half, second_half_length);
-        Merge(first_half,second_half,main_array, first_half_length, second_half_length);
+        Merge(first_half, second_half, main_array, first_half_length, second_half_length);
     }
     return count;
 }
 
 
 // this function returns median of first middle and last element of an array
-int MedianOfThree(int arr[], int arr_length) {
-    int temp_array[arr_length];
-    ArrayCopy(arr, temp_array, 0, arr_length - 1, 0);
+void MedianOfThree(int first, int last, int arr[]) {
     int allThree[3];
-    int medium_index = (((arr_length / 2)+ 1));
+    int piece_size = (last - first + 1);
+    int medium_index = piece_size / 2;
 
-    allThree[0] = arr[0];
+    allThree[0] = arr[first];
     allThree[1] = arr[medium_index];
-    allThree[2] = arr[arr_length - 1];
+    allThree[2] = arr[last];
 
-    InsertionSort(allThree, 3);
-// calculating the index of the median
-    if (arr[medium_index] == allThree[1]) {
-        return medium_index;
-    } else if (arr[0] == allThree[1]) {
-        return 0;
-    } else {
-        return arr_length - 1;
+    InsertionSort(allThree, 3);     // to get the median of three we need to sort the allThree list
+
+    int temp = arr[first];
+    arr[first] = allThree[1];
+    if (allThree[1] == arr[last]) {
+        arr[last] = temp;
+    } else if (allThree[1] == arr[medium_index]) {
+        arr[medium_index] = temp;
     }
-
 }
 
-
-void QuickSort(int number[], int length, int first, int last, int mode) {
-    int i, j, pivot, temp;
+//Sorts array using pivots and compares elements from both left and right then finds the place of that pivot. Then repeats the same again as a divide and conquer algorithm.
+//--- Mode 1: Pivot -> median of three ----- Mode 0: Pivot -> first element ---
+// Time complexity : O(nLog(n))
+int QuickSort(int array[], int length, int first, int last, int mode) {
+    int i, j, pivot;
 
     if (first < last) {
 
-        if (mode == 0) {
-            pivot = first;
-        } else if (mode == 1) {
-            pivot = MedianOfThree(number, length);
+        pivot = first;
+        if (mode == 1 && length >= 3) {
+            MedianOfThree(first, last, array);
         }
         i = first;
         j = last;
 
         while (i < j) {
-            while (number[i] <= number[pivot] && i < last)
+            while (array[i] <= array[pivot] && i < last)
                 i++;
-            while (number[j] > number[pivot])
+            while (array[j] > array[pivot])
                 j--;
-            if (i < j) {
-                temp = number[i];
-                number[i] = number[j];
-                number[j] = temp;
-            }
+            if (i < j)
+                Swap(array, i, j);
         }
 
-        temp = number[pivot];
-        number[pivot] = number[j];
-        number[j] = temp;
-        QuickSort(number, length, first, j - 1, mode);
-        QuickSort(number, length, j + 1, last, mode);
+        Swap(array, pivot, j);
 
+        QuickSort(array, j, first, j - 1, mode);
+        QuickSort(array, length - (j + 1), j + 1, last, mode);
+    }
+
+    return 0;
+}
+
+//Constructs and assures the heap structure in every call.
+void ConstructHeap(int array[], int length, int index) {
+    int max = index;
+    int left = 2 * index + 1;
+    int right = 2 * index + 2;
+
+    if (left < length && array[left] > array[max])
+        max = left;
+
+    if (right < length && array[right] > array[max])
+        max = right;
+
+    if (max != index) {
+        Swap(array, index, max);
+
+        ConstructHeap(array, length, max);
     }
 }
 
+//Sorts the array by constructing heap with remaining elements in every turn.
+// Time complexity : O(nLog(n))
+int HeapSort(int arr[], int length) {
+
+    for (int i = (length / 2) - 1; i >= 0; i--) {
+        ConstructHeap(arr, length, i);
+    }
+
+    for (int i = length - 1; i > 0; i--) {
+        Swap(arr, 0, i);
+
+        ConstructHeap(arr, i, 0);
+    }
+
+    return 0;
+}
+
+//Counts elements and sorts them using 2 more arrays
+// Time complexity : O(n)
+int CountingSort(int array[], int length) {
+    int max = 0, min = MAX_SIZE+1;
+
+    for (int i = 0; i < length; i++) {
+        if (array[i] < min)
+            min = array[i];
+        if (array[i] > max)
+            max = array[i];
+    }
+
+    int range = max - min + 1;
+    int countArr[range];
+    int outputArr[length];
+
+    memset(countArr, 0, sizeof countArr);       // for zeroing the newly created array
+    memset(outputArr, 0, sizeof outputArr);
+
+    for (int i = 0; i < length; i++)
+        countArr[array[i] - min]++;
+
+    for (int i = 1; i < range; i++)
+        countArr[i] += countArr[i - 1];
+
+    for (int i = length - 1; i >= 0; i--) {
+        outputArr[countArr[array[i] - min] - 1] = array[i];
+        countArr[array[i] - min]--;
+    }
+
+    for (int i = 0; i < length; i++)
+        array[i] = outputArr[i];
+
+    return 0;
+}
+
+void RandomArrayGenerator(int array[], int length) {
+
+    srand(time(0));
+    for (int i = 0; i < length; i++) {
+        array[i] = rand() % 10000;
+    }
+}
 
 int main() {
-    int worstCase_test_array[] = {11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1};
-    int test_array[] = {2, 5, 63, 6, 53, 2, 567, 7, 4};
-    int array_length = arrlen(worstCase_test_array);
-    int test_count = MergeSort(worstCase_test_array,array_length);
-    for (int i = 0; i < array_length; i++) {
-        printf("%d\t", worstCase_test_array[i]);
+    int test_array[100];
+    int array_length = arrlen(test_array);
+    RandomArrayGenerator(test_array,100);
+//  InsertionSort(test_array, 100);
+//  BinaryInsertionSort(test_array,100);
+//  MergeSort(test_array,100);
+//  QuickSort(test_array,100,0,99,0);
+//  QuickSort(test_array,100,0,99,1);
+//  HeapSort(test_array,100);
+//  CountingSort(test_array,100);
+
+    for (int i = 0; i < 100; i++) {
+        printf("%d\t", test_array[i]);
+        if ((i + 1) % 10 == 0)
+            printf("\n");
     }
-    printf("\n%d", array_length);
+
+    printf("\n%d", 100);
 
     return 0;
 }
