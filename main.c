@@ -5,11 +5,11 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include <time.h>
+#include <sys/time.h>
 #include <math.h>
 
 #define arrlen(arr) sizeof(arr) / sizeof(arr[0]);  // TODO: bruv make it work nicely mmmmmmmm
-#define MAX_SIZE 10000
+#define MAX_VALUE 10000
 
 void Swap(int array[], int i, int j) {
     int temp = array[i];
@@ -230,8 +230,8 @@ int HeapSort(int arr[], int length) {
 
 //Counts elements and sorts them using 2 more arrays
 // Time complexity : O(n)
-int CountingSort(int array[], int length) {
-    int max = 0, min = MAX_SIZE+1;
+void CountingSort(int array[], int length) {
+    int max = 0, min = MAX_VALUE + 1;
 
     for (int i = 0; i < length; i++) {
         if (array[i] < min)
@@ -272,25 +272,79 @@ void RandomArrayGenerator(int array[], int length) {
     }
 }
 
+long GetTimeInterval(int *test_array,int length, void (*sorting_func)(int *arr,int length)) {
+
+    struct timeval start, end;
+    long seconds;
+    long micros;
+    gettimeofday(&start,NULL);  //start the timer
+
+    (*sorting_func)(test_array, length);
+
+    gettimeofday(&end,NULL);  //end the timer
+
+    seconds= (end.tv_sec - start.tv_sec);
+    micros= ((seconds * 1000000) + end.tv_usec) - (start.tv_usec);
+
+    return micros;
+}
+
+
+
+void QuickSortPivotFirst(int array[], int length) {
+    QuickSort(array, length, 0, length-1, 0);
+}
+
+void QuickSortPivotMedian(int array[], int length) {
+    QuickSort(array, length, 0, length-1, 1);
+}
+
 int main() {
-    int test_array[100];
+    int length = 20000;
+    int test_array[length];
     int array_length = arrlen(test_array);
-    RandomArrayGenerator(test_array,100);
-//  InsertionSort(test_array, 100);
-//  BinaryInsertionSort(test_array,100);
-//  MergeSort(test_array,100);
-//  QuickSort(test_array,100,0,99,0);
-//  QuickSort(test_array,100,0,99,1);
-//  HeapSort(test_array,100);
-//  CountingSort(test_array,100);
+    long microseconds = 0;
+    RandomArrayGenerator(test_array,length);
+    int main_array[length];
 
-    for (int i = 0; i < 100; i++) {
-        printf("%d\t", test_array[i]);
-        if ((i + 1) % 10 == 0)
-            printf("\n");
-    }
+    ArrayCopy(test_array,main_array,0,length-1,0);
+    microseconds = GetTimeInterval(main_array, length, &InsertionSort);
+    printf("Execution time for Insertion Sort: %ld\n",microseconds);
 
-    printf("\n%d", 100);
+    ArrayCopy(test_array,main_array,0,length-1,0);
+    microseconds = GetTimeInterval(main_array, length, &BinaryInsertionSort);
+    printf("Execution time for Binary Insertion Sort: %ld\n",microseconds);
+
+    ArrayCopy(test_array,main_array,0,length-1,0);
+    microseconds = GetTimeInterval(main_array, length, &MergeSort);
+    printf("Execution time for Mergesort: %ld\n",microseconds);
+
+    ArrayCopy(test_array,main_array,0,length-1,0);
+    microseconds = GetTimeInterval(main_array, length, &QuickSortPivotFirst);
+    printf("Execution time for Quicksort (pivot first element): %ld\n",microseconds);
+
+    ArrayCopy(test_array,main_array,0,length-1,0);
+    microseconds = GetTimeInterval(main_array, length, &QuickSortPivotMedian);
+    printf("Execution time for Quicksort (pivot median): %ld\n",microseconds);
+
+    ArrayCopy(test_array,main_array,0,length-1,0);
+    microseconds = GetTimeInterval(main_array, length, &HeapSort);
+    printf("Execution time for Heapsort: %ld\n",microseconds);
+
+    ArrayCopy(test_array,main_array,0,length-1,0);
+    microseconds = GetTimeInterval(main_array, length, &CountingSort);
+    printf("Execution time for Counting Sort: %ld\n",microseconds);
+
+   // printf("after count sort \n\n\n\n");
+   // for (int i = 0; i < length; i++) {
+   //     printf("%d\t", counting_array[i]);
+   //     if ((i + 1) % 10 == 0)
+   //         printf("\n");
+   // }
+
+   // printf("\n%d", 100);
 
     return 0;
 }
+
+
