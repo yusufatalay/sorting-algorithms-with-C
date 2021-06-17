@@ -4,7 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_C
-  "D:/PROJECTS/ClionProjects/Sorting-Algorithms-With-C/main.c" "D:/PROJECTS/ClionProjects/Sorting-Algorithms-With-C/cmake-build-debug/CMakeFiles/Sorting_Algorithms_With_C.dir/main.c.obj"
+  "D:/Workspaces/clion/sorting-algorithms-with-C/main.c" "D:/Workspaces/clion/sorting-algorithms-with-C/cmake-build-debug/CMakeFiles/Sorting_Algorithms_With_C.dir/main.c.obj"
   )
 set(CMAKE_C_COMPILER_ID "GNU")
 

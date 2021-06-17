@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-D:/PROJECTS/ClionProjects/Sorting-Algorithms-With-C/main.c
+D:/Workspaces/clion/sorting-algorithms-with-C/main.c
 stdio.h
 -
 string.h

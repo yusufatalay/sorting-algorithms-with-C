@@ -222,7 +222,8 @@ void CountingSort(int array[], int length) {
             max = array[i];
     }
 
-    int range = max - min + 1;              // counting sort performs good in terms of execution time, however it takes much more memory than array to be sort
+    int range = max - min +
+                1;              // counting sort performs good in terms of execution time, however it takes much more memory than array to be sort
     int countArr[range];
     int outputArr[length];
 
@@ -253,19 +254,19 @@ void RandomArrayGenerator(int array[], int length) {
 }
 
 // For calculating the execution time of the sorting algorithm we calculate the time interval before and after calling the according function
-long GetTimeInterval(int *test_array,int length, void (*sorting_func)(int *arr,int length)) {
+long GetTimeInterval(int *test_array, int length, void (*sorting_func)(int *arr, int length)) {
 
     struct timeval start, end;
     long seconds;
     long micros;
-    gettimeofday(&start,NULL);  //start the timer
+    gettimeofday(&start, NULL);  //start the timer
 
     (*sorting_func)(test_array, length);        // run the sorting algorithm
 
-    gettimeofday(&end,NULL);  //end the timer
+    gettimeofday(&end, NULL);  //end the timer
 
-    seconds= (end.tv_sec - start.tv_sec);
-    micros= ((seconds * 1000000) + end.tv_usec) - (start.tv_usec);
+    seconds = (end.tv_sec - start.tv_sec);
+    micros = ((seconds * 1000000) + end.tv_usec) - (start.tv_usec);
 
     return micros;
 }
@@ -273,132 +274,123 @@ long GetTimeInterval(int *test_array,int length, void (*sorting_func)(int *arr,i
 
 // parent caller of Quick sort algorithm
 void QuickSortPivotFirst(int array[], int length) {
-    QuickSort(array, length, 0, length-1, 0);
+    QuickSort(array, length, 0, length - 1, 0);
 }
 
 // parent caller of Quick sort algorithm with median of three as pivot
 void QuickSortPivotMedian(int array[], int length) {
-    QuickSort(array, length, 0, length-1, 1);
+    QuickSort(array, length, 0, length - 1, 1);
 }
 
 
 // A helper function for creating best& worst cases for specific sorting methods
 // --- Mode 0: Sorted Array --- Mode 1: Reverse Sorted Array ---
-void ConstructSorted(int array[], int length, int mode){
-    if(mode == 0){
-        for(int i = 0; i < length; i++) {
+void ConstructSorted(int array[], int length, int mode) {
+    if (mode == 0) {
+        for (int i = 0; i < length; i++) {
             array[i] = i;
         }
-    }else if (mode == 1){
-        for (int i = length-1, j = 0; i>=0; i--){
+    } else if (mode == 1) {
+        for (int i = length - 1, j = 0; i >= 0; i--) {
             array[j] = i;
             j++;
         }
     }
 }
 
-
 int main() {
-    // TO SEE THE EFFECT OF THE ALGORITHM SIMPLY REMOVE THE COMMENT CHARACTERS
     long microseconds = 0;
 
-
 //---------------------- INSERTION SORT
-//  printf("\nInsertion Sort\n");
-//  for (int i = 5000; i <= 25000; i += 500) {
-//      int length = i;
-//      int test_array[length];
-//      ConstructSorted(test_array, length, 1);
-//      int main_array[length];
-//      ArrayCopy(test_array, main_array, 0, length - 1, 0);
-//      microseconds = GetTimeInterval(main_array, length, &InsertionSort);
-//      printf("Exec. Time for n = %05d is : %ld\n", i, microseconds);
-//  }
+    printf("\nInsertion Sort\n");
+    for (int i = 20000; i <= 25000; i += 500) {
+        int length = i;
+        int test_array[length];
+        ConstructSorted(test_array, length, 1);
+        int main_array[length];
+        ArrayCopy(test_array, main_array, 0, length - 1, 0);
+        microseconds = GetTimeInterval(main_array, length, &InsertionSort);
+        printf("Exec. Time for n = %05d is %ld ms\n", i, microseconds);
+    }
 
 
 //----------------------BINARY INSERTION SORT
-
-//  printf("\nBinary Insertion Sort\n");
-//  for (int i = 5000; i <= 25000; i += 500) {
-//      int length = i;
-//      int test_array[length];
-//      ConstructSorted(test_array, length, 1);
-//      int main_array[length];
-//      ArrayCopy(test_array, main_array, 0, length - 1, 0);
-//      microseconds = GetTimeInterval(main_array, length, &BinaryInsertionSort);
-//      printf("Exec. Time for n = %05d is : %ld\n", i, microseconds);
-//  }
+    printf("\nBinary Insertion Sort\n");
+    for (int i = 20000; i <= 25000; i += 500) {
+        int length = i;
+        int test_array[length];
+        ConstructSorted(test_array, length, 1);
+        int main_array[length];
+        ArrayCopy(test_array, main_array, 0, length - 1, 0);
+        microseconds = GetTimeInterval(main_array, length, &BinaryInsertionSort);
+        printf("Exec. Time for n = %05d is %ld ms\n", i, microseconds);
+    }
 
 
 //---------------------- MERGESORT
-
-//  printf("\nMergeSort Sort\n");
-//  for (int i = 5000; i <= 25000; i += 500) {
-//      int length = i;
-//      int test_array[length];
-//      ConstructSorted(test_array, length, 1);
-//      int main_array[length];
-//      ArrayCopy(test_array, main_array, 0, length - 1, 0);
-//      microseconds = GetTimeInterval(main_array, length, &MergeSort);
-//      printf("Exec. Time for n = %05d is : %ld\n", i, microseconds);
-//  }
+    printf("\nMergeSort Sort\n");
+    for (int i = 20000; i <= 25000; i += 500) {
+        int length = i;
+        int test_array[length];
+        ConstructSorted(test_array, length, 1);
+        int main_array[length];
+        ArrayCopy(test_array, main_array, 0, length - 1, 0);
+        microseconds = GetTimeInterval(main_array, length, &MergeSort);
+        printf("Exec. Time for n = %05d is %ld ms\n", i, microseconds);
+    }
 
 
 //---------------------- QUICKSORT (FIRST ELEMENT AS PIVOT)
-
-//  printf("\nQuickSortPivotFirst\n");
-//  for (int i = 5000; i <= 25000; i += 500) {
-//      int length = i;
-//      int test_array[length];
-//      ConstructSorted(test_array, length, 1);
-//      int main_array[length];
-//      ArrayCopy(test_array, main_array, 0, length - 1, 0);
-//      microseconds = GetTimeInterval(main_array, length, &QuickSortPivotFirst);
-//      printf("Exec. Time for n = %05d is : %ld\n", i, microseconds);
-//  }
+    printf("\nQuickSortPivotFirst\n");
+    for (int i = 20000; i <= 25000; i += 500) {
+        int length = i;
+        int test_array[length];
+        ConstructSorted(test_array, length, 1);
+        int main_array[length];
+        ArrayCopy(test_array, main_array, 0, length - 1, 0);
+        microseconds = GetTimeInterval(main_array, length, &QuickSortPivotFirst);
+        printf("Exec. Time for n = %05d is %ld ms\n", i, microseconds);
+    }
 
 
 
 
 //---------------------- QUICKSORT (MEDIAN OF THREE AS PIVOT)
-
-//  printf("\nQuickSortPivotMedian\n");
-//  for (int i = 5000; i <= 25000; i += 500) {
-//      int length = i;
-//      int test_array[length];
-//      ConstructSorted(test_array, length, 1);
-//      int main_array[length];
-//      ArrayCopy(test_array, main_array, 0, length - 1, 0);
-//      microseconds = GetTimeInterval(main_array, length, &QuickSortPivotMedian);
-//      printf("Exec. Time for n = %05d is : %ld\n", i, microseconds);
-//  }
+    printf("\nQuickSortPivotMedian\n");
+    for (int i = 20000; i <= 25000; i += 500) {
+        int length = i;
+        int test_array[length];
+        ConstructSorted(test_array, length, 1);
+        int main_array[length];
+        ArrayCopy(test_array, main_array, 0, length - 1, 0);
+        microseconds = GetTimeInterval(main_array, length, &QuickSortPivotMedian);
+        printf("Exec. Time for n = %05d is %ld ms\n", i, microseconds);
+    }
 
 
 //---------------------- HEAPSORT
-
-//  printf("\nHeapSort\n");
-//  for (int i = 5000; i <= 25000; i += 500) {
-//      int length = i;
-//      int test_array[length];
-//      ConstructSorted(test_array, length, 1);
-//      int main_array[length];
-//      ArrayCopy(test_array, main_array, 0, length - 1, 0);
-//      microseconds = GetTimeInterval(main_array, length, &HeapSort);
-//      printf("Exec. Time for n = %05d is : %ld\n", i, microseconds);
-//  }
+    printf("\nHeapSort\n");
+    for (int i = 20000; i <= 25000; i += 500) {
+        int length = i;
+        int test_array[length];
+        ConstructSorted(test_array, length, 1);
+        int main_array[length];
+        ArrayCopy(test_array, main_array, 0, length - 1, 0);
+        microseconds = GetTimeInterval(main_array, length, &HeapSort);
+        printf("Exec. Time for n = %05d is %ld ms\n", i, microseconds);
+    }
 
 //---------------------- COUNTING SORT
-
-//  printf("\nCounting Sort\n");
-//  for (int i = 5000; i <= 25000; i += 500) {
-//      int length = i;
-//      int test_array[length];
-//      ConstructSorted(test_array, length, 1);
-//      int main_array[length];
-//      ArrayCopy(test_array, main_array, 0, length - 1, 0);
-//      microseconds = GetTimeInterval(main_array, length, &CountingSort);
-//      printf("Exec. Time for n = %05d is : %ld\n", i, microseconds);
-//  }
+    printf("\nCounting Sort\n");
+    for (int i = 20000; i <= 25000; i += 500) {
+        int length = i;
+        int test_array[length];
+        ConstructSorted(test_array, length, 1);
+        int main_array[length];
+        ArrayCopy(test_array, main_array, 0, length - 1, 0);
+        microseconds = GetTimeInterval(main_array, length, &CountingSort);
+        printf("Exec. Time for n = %05d is %ld ms\n", i, microseconds);
+    }
 
     return 0;
 }
